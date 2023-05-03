@@ -1,0 +1,9 @@
+.cards {
+    display: flex;
+    justify-content:space-between;
+}
+
+.cards-addition {
+    display: flex;
+    align-items: center;
+}
