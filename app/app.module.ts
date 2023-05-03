@@ -21,10 +21,11 @@ import { HeaderComponent } from './components/header/header.component'
 import { HomeComponent } from './pages/components/home/home.component';
 import { ProductsHeaderComponent } from './pages/components/products-header/products-header.component';
 import { FiltersComponent } from './pages/components/filters/filters.component';
-import { ProductBoxComponent } from './pages/components/product-box/product-box.component'
+import { ProductBoxComponent } from './pages/components/product-box/product-box.component';
+import { CartComponent } from './pages/components/cart/cart.component'
 
 @NgModule({
-	declarations: [AppComponent, HeaderComponent, HomeComponent, ProductsHeaderComponent, FiltersComponent, ProductBoxComponent],
+	declarations: [AppComponent, HeaderComponent, HomeComponent, ProductsHeaderComponent, FiltersComponent, ProductBoxComponent, CartComponent],
 	imports: [
 		BrowserModule,
 		AppRoutingModule,
