@@ -38,7 +38,9 @@
                 <span>
                     {{ element.quantity }}
                 </span>
-                <button mat-icon-buttn>
+                <button 
+                (click)="onAddQuantity(element)"
+                mat-icon-buttn>
                     <mat-icon>add</mat-icon>
                 </button>
             </td>
