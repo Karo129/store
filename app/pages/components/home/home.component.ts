@@ -1,41 +1,69 @@
-import { Component, OnInit } from '@angular/core';
-import { Product } from 'src/app/models/product.model';
-import { CartService } from 'src/app/services/cart.service';
+import { Component, OnDestroy, OnInit } from '@angular/core'
+import { Subscription } from 'rxjs'
+import { Product } from 'src/app/models/product.model'
+import { CartService } from 'src/app/services/cart.service'
+import { StoreService } from 'src/app/services/store.service'
 
-const ROWS_HEIGHT: { [id: number]: number } = {1: 400, 3: 335, 4: 350};
-
+const ROWS_HEIGHT: { [id: number]: number } = { 1: 400, 3: 335, 4: 350 }
 
 @Component({
-  selector: 'app-home',
-  templateUrl: './home.component.html',
-  styleUrls: ['./home.component.css']
+	selector: 'app-home',
+	templateUrl: './home.component.html',
+	styleUrls: ['./home.component.css'],
 })
-export class HomeComponent implements OnInit {
-  cols =3;
-  rowHeight = ROWS_HEIGHT[this.cols];
-  category: string | undefined;
+export class HomeComponent implements OnInit, OnDestroy {
+	cols = 3
+	rowHeight = ROWS_HEIGHT[this.cols]
+	category: string | undefined
+	products: Array<Product> | undefined
+	sort = 'desc'
+	count = '12'
+	productsSubcription: Subscription | undefined
 
-  constructor(private cartSercice: CartService) { }
+	constructor(private cartSercice: CartService, private storeService: StoreService) {}
 
-  ngOnInit(): void {
-  }
+	ngOnInit(): void {
+		this.getProducts()
+	}
 
-  onColumnsCountChange(colsNum: number) {
-    this.cols = colsNum;
-    this.rowHeight = ROWS_HEIGHT[this.cols];
-  }
+	getProducts(): void {
+		this.storeService.getAllProducts(this.count, this.sort, this.category).subscribe(_products => {
+			this.products = _products
+		})
+	}
 
-  onShowCategory(newCategory: string): void {
-    this.category = newCategory;
-  }
-  onAddToCart(product: Product): void {
-    this.cartSercice.addToCart({
-      product: product.image,
-      name: product.title,
-      price: product.price,
-      quantity: 1,
-      id: product.id
-    });
-  }
+	onColumnsCountChange(colsNum: number) {
+		this.cols = colsNum
+		this.rowHeight = ROWS_HEIGHT[this.cols]
+	}
 
+	onShowCategory(newCategory: string): void {
+		this.category = newCategory;
+    this.getProducts();
+	}
+	onAddToCart(product: Product): void {
+		this.cartSercice.addToCart({
+			product: product.image,
+			name: product.title,
+			price: product.price,
+			quantity: 1,
+			id: product.id,
+		})
+	}
+
+	onItemsCountChange(newCount: number): void {
+		this.count = newCount.toString()
+		this.getProducts()
+	}
+
+	onSortChange(newSort: string): void {
+		this.sort = newSort
+		this.getProducts()
+	}
+
+	ngOnDestroy(): void {
+		if (this.productsSubcription) {
+			this.productsSubcription?.unsubscribe()
+		}
+	}
 }
